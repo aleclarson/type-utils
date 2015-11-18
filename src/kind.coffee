@@ -1,10 +1,11 @@
 
-module.exports = (TU) ->
+inArray = require "in-array"
 
-  Kind: (kind) -> (value, key) ->
-    return if TU.testKind TU.getType(value), kind
-    key = if key? then "'#{key}'" else "This property"
-    throw TypeError "#{key} must inherit from #{kind.name}."
+{ getTypeNames } = require "./helpers"
+
+VALUE_TYPES = [ Number, String, Boolean ]
+
+module.exports = (TU) ->
 
   getKind: (type) ->
     return null if !type? or type is Object
@@ -17,19 +18,19 @@ module.exports = (TU) ->
   isKind: (value, type) ->
     value instanceof type
 
-  assertKind: (value, type, keyPath) ->
-    return if TU.isKind value, type
-    prefix = if keyPath? then "'#{keyPath}' must be" else "Expected"
-    if TU.isType type, Array then expected = type.map((t) -> t.name).join ", "
-    else expected = type.name
-    global.failedAssertion = { value, type, keyPath }
-    throw TypeError prefix + " a #{expected}."
+  assertKind: (value, validator, keyPath) ->
+    return if TU.isKind value, validator
+    if keyPath? then prefix = "'#{keyPath}' must inherit from "
+    else prefix = "Expected a kind of "
+    global.failure ?= { key: keyPath, value, validator }
+    throw TypeError "#{prefix}#{getTypeNames validator}."
 
   testKind: (type, kind, compare) ->
     compare ?= TU.compareTypes
     loop
       return yes if compare type, kind
       break if type is Object
+      return no if inArray VALUE_TYPES, type
       type = TU.getKind type
       break if type is null
     no
