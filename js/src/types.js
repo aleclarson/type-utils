@@ -9,8 +9,9 @@ inArray = require("in-array");
 define = require("define");
 
 module.exports = function(TU) {
-  var Kind, OneOf, Shape, Validator, Void;
+  var Kind, Nan, OneOf, Shape, Validator, Void;
   Void = NamedFunction("Void", emptyFunction);
+  Nan = NamedFunction("Nan", emptyFunction.thatReturns(NaN));
   Validator = NamedFunction("Validator", function(name, constructor) {
     var type;
     type = NamedFunction(name, function() {
@@ -105,6 +106,7 @@ module.exports = function(TU) {
   };
   return {
     Void: Void,
+    Nan: Nan,
     Kind: Kind,
     OneOf: OneOf,
     Shape: Shape,

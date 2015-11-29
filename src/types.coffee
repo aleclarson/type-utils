@@ -8,6 +8,8 @@ module.exports = (TU) ->
 
   Void = NamedFunction "Void", emptyFunction
 
+  Nan = NamedFunction "Nan", emptyFunction.thatReturns NaN
+
   Validator = NamedFunction "Validator", (name, constructor) ->
     type = NamedFunction name, ->
       validate = constructor.apply this, arguments
@@ -61,6 +63,7 @@ module.exports = (TU) ->
 #
 
   { Void
+    Nan
     Kind
     OneOf
     Shape

@@ -7,16 +7,27 @@ getTypeNames = require("./helpers").getTypeNames;
 initValidation = require("./validation");
 
 module.exports = function(TU) {
-  var addValidatorType, assertType, compareTypes, getType, isType, ref, testType, validateTypes;
+  var addValidatorType, assertReturnType, assertType, compareTypes, getType, isNan, isType, ref, testType, validateTypes;
   ref = initValidation(TU), validateTypes = ref.validateTypes, addValidatorType = ref.addValidatorType;
+  isNan = function(value, ctr) {
+    if ((ctr === Object) || (ctr === String) || (value instanceof Object)) {
+      return false;
+    }
+    return isNaN(value);
+  };
   getType = function(value) {
+    var ctr;
     if (value == null) {
       return TU.Void;
-    } else if (Number.isNaN(value)) {
-      throw Error("NaN indicates a number error.");
-    } else {
-      return value.constructor || null;
     }
+    ctr = value.constructor;
+    if (ctr == null) {
+      return null;
+    }
+    if (isNan(value, ctr)) {
+      return TU.Nan;
+    }
+    return ctr;
   };
   isType = function(value, type, compare) {
     var i, len, types;
@@ -34,10 +45,19 @@ module.exports = function(TU) {
   };
   testType = function(value, type, compare) {
     if (type instanceof TU.Validator) {
-      return type(value);
-    }
-    if (compare == null) {
-      compare = TU.compareTypes;
+      try {
+        type(value);
+      } catch (_error) {
+        error = _error;
+        global.failure = null;
+        return false;
+      }
+      return true;
+    } else {
+      if (compare == null) {
+        compare = TU.compareTypes;
+      }
+      return compare(type, TU.getType(value));
     }
     return compare(type, TU.getType(value));
   };
@@ -48,7 +68,10 @@ module.exports = function(TU) {
     }
   };
   assertType = function(value, type, keyPath) {
-    var passed, prefix;
+    var passed;
+    if (type instanceof TU.Validator) {
+      return type(value);
+    }
     try {
       passed = TU.isType(value, type);
     } catch (_error) {}
@@ -62,12 +85,24 @@ module.exports = function(TU) {
         type: type
       };
     }
-    if (keyPath != null) {
-      prefix = "'" + keyPath + "' must be";
-    } else {
-      prefix = "Expected";
+    throw TypeError(keyPath != null ? "'" + keyPath + "' must be a " + (getTypeNames(type)) + "." : "Expected a " + (getTypeNames(type)) + ".");
+  };
+  assertReturnType = function(value, type, keyPath) {
+    var passed;
+    try {
+      passed = TU.isType(value, type);
+    } catch (_error) {}
+    if (passed === true) {
+      return;
     }
-    throw TypeError(prefix + " a " + (getTypeNames(type)) + ".");
+    if (global.failure == null) {
+      global.failure = {
+        key: keyPath,
+        value: value,
+        type: type
+      };
+    }
+    throw TypeError(keyPath != null ? "'" + keyPath + "' must return a " + (getTypeNames(type)) + "." : "Expected a " + (getTypeNames(type)) + " to be returned.");
   };
   return {
     getType: getType,
@@ -76,6 +111,7 @@ module.exports = function(TU) {
     testType: testType,
     compareTypes: compareTypes,
     assertType: assertType,
+    assertReturnType: assertReturnType,
     validateTypes: validateTypes,
     addValidatorType: addValidatorType
   };
