@@ -1,4 +1,6 @@
-var getTypeNames, initValidation, setType;
+var getTypeNames, initValidation, reportFailure, setType;
+
+reportFailure = require("report-failure");
 
 setType = require("set-type");
 
@@ -44,12 +46,13 @@ module.exports = function(TU) {
     return TU.testType(value, type, compare);
   };
   testType = function(value, type, compare) {
+    var error;
     if (type instanceof TU.Validator) {
       try {
         type(value);
       } catch (_error) {
         error = _error;
-        global.failure = null;
+        error["catch"]();
         return false;
       }
       return true;
@@ -59,7 +62,6 @@ module.exports = function(TU) {
       }
       return compare(type, TU.getType(value));
     }
-    return compare(type, TU.getType(value));
   };
   compareTypes = {
     frozen: false,
@@ -68,7 +70,7 @@ module.exports = function(TU) {
     }
   };
   assertType = function(value, type, keyPath) {
-    var passed;
+    var error, passed;
     if (type instanceof TU.Validator) {
       return type(value);
     }
@@ -78,31 +80,27 @@ module.exports = function(TU) {
     if (passed === true) {
       return;
     }
-    if (global.failure == null) {
-      global.failure = {
-        key: keyPath,
-        value: value,
-        type: type
-      };
-    }
-    throw TypeError(keyPath != null ? "'" + keyPath + "' must be a " + (getTypeNames(type)) + "." : "Expected a " + (getTypeNames(type)) + ".");
+    error = TypeError(keyPath != null ? "'" + keyPath + "' must be a " + (getTypeNames(type)) + "." : "Expected a " + (getTypeNames(type)) + ".");
+    return reportFailure(error, {
+      key: keyPath,
+      value: value,
+      type: type
+    });
   };
   assertReturnType = function(value, type, keyPath) {
-    var passed;
+    var error, passed;
     try {
       passed = TU.isType(value, type);
     } catch (_error) {}
     if (passed === true) {
       return;
     }
-    if (global.failure == null) {
-      global.failure = {
-        key: keyPath,
-        value: value,
-        type: type
-      };
-    }
-    throw TypeError(keyPath != null ? "'" + keyPath + "' must return a " + (getTypeNames(type)) + "." : "Expected a " + (getTypeNames(type)) + " to be returned.");
+    error = TypeError(keyPath != null ? "'" + keyPath + "' must return a " + (getTypeNames(type)) + "." : "Expected a " + (getTypeNames(type)) + " to be returned.");
+    return reportFailure(error, {
+      key: keyPath,
+      value: value,
+      type: type
+    });
   };
   return {
     getType: getType,

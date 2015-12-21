@@ -1,4 +1,6 @@
 
+reportFailure = require "report-failure"
+
 { getTypeNames } = require "./helpers"
 
 module.exports = (TU) ->
@@ -6,11 +8,11 @@ module.exports = (TU) ->
   validatorTypeCache = []
 
   validateType = (value, validator, keyPath) ->
-    for { type, validate } in validatorTypeCache
-      if TU.isType validator, type
-        return validate value, validator, keyPath
-    global.failure ?= { key: keyPath, value, validator }
-    throw TypeError "'validator' has an unexpected type."
+    for config in configs
+      if config.isType validator
+        return config.validate value, validator, keyPath
+    error = TypeError "'validator' has an unexpected type."
+    reportFailure error, { key: keyPath, value, validator }
 
   validateTypes = (obj, validators, keyPath) ->
     return unless validators?
@@ -36,10 +38,10 @@ module.exports = (TU) ->
     return if types.length is 0
     return TU.assertType value, types[0], keyPath if types.length is 1
     return if TU.isType value, types
-    global.failure ?= { key: keyPath, value, types }
     keyPath = if keyPath? then "'#{keyPath}'" else "This property"
     typeNames = getTypeNames types
-    throw TypeError "#{keyPath} must be a #{typeNames}"
+    error = TypeError "#{keyPath} must be a #{typeNames}"
+    reportFailure error, { key: keyPath, value, types }
 
   addValidatorType Function, validateWithFunction
   addValidatorType Array, validateWithArray

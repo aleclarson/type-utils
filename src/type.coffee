@@ -1,4 +1,5 @@
 
+reportFailure = require "report-failure"
 setType = require "set-type"
 
 { getTypeNames } = require "./helpers"
@@ -30,7 +31,7 @@ module.exports = (TU) ->
     if type instanceof TU.Validator
       try type value
       catch error
-        global.failure = null
+        error.catch()
         return no
       yes
     else
@@ -45,20 +46,20 @@ module.exports = (TU) ->
     return type value if type instanceof TU.Validator
     try passed = TU.isType value, type
     return if passed is yes
-    global.failure ?= { key: keyPath, value, type }
-    throw TypeError(
+    error = TypeError(
       if keyPath? then "'#{keyPath}' must be a #{getTypeNames type}."
       else "Expected a #{getTypeNames type}."
     )
+    reportFailure error, { key: keyPath, value, type }
 
   assertReturnType = (value, type, keyPath) ->
     try passed = TU.isType value, type
     return if passed is yes
-    global.failure ?= { key: keyPath, value, type }
-    throw TypeError(
+    error = TypeError(
       if keyPath? then "'#{keyPath}' must return a #{getTypeNames type}."
       else "Expected a #{getTypeNames type} to be returned."
     )
+    reportFailure error, { key: keyPath, value, type }
 
   { getType
     setType

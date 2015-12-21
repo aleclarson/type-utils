@@ -1,6 +1,8 @@
-var NamedFunction, define, emptyFunction, inArray;
+var NamedFunction, define, emptyFunction, inArray, reportFailure;
 
 NamedFunction = require("named-function");
+
+reportFailure = require("report-failure");
 
 emptyFunction = require("emptyFunction");
 
@@ -25,42 +27,40 @@ module.exports = function(TU) {
   Kind = Validator("Kind", function(type) {
     var validateKind;
     return NamedFunction(type.name + "_Kind", validateKind = function(value, key) {
+      var error, name;
       if (TU.testKind(TU.getType(value), type)) {
         return;
       }
-      if (global.failure == null) {
-        global.failure = {
-          key: key,
-          value: value,
-          type: type
-        };
-      }
-      key = key != null ? "'" + key + "'" : "This property";
-      throw TypeError(key + " must inherit from " + type.name + ".");
+      name = key != null ? "'" + key + "'" : "This property";
+      error = TypeError(name + " must inherit from " + type.name + ".");
+      return reportFailure(error, {
+        key: key,
+        value: value,
+        type: type
+      });
     });
   });
   OneOf = Validator("OneOf", function(possibleValues) {
     var validateOneOf;
     return validateOneOf = function(value, key) {
+      var error, name;
       if (inArray(possibleValues, value)) {
         return;
       }
-      if (global.failure == null) {
-        global.failure = {
-          key: key,
-          value: value,
-          possibleValues: possibleValues
-        };
-      }
-      key = key != null ? "'" + key + "'" : "This property";
-      throw TypeError(key + " has an invalid value.");
+      name = key != null ? "'" + key + "'" : "This property";
+      error = TypeError(name + " has an invalid value.");
+      return reportFailure(error, {
+        key: key,
+        value: value,
+        possibleValues: possibleValues
+      });
     };
   });
   Shape = Validator("Shape", function(shape) {
     var shapeKeys, validateShape;
     shapeKeys = Shape.gatherKeys(shape);
     return validateShape = function(value, key) {
-      var i, keyPath, len, ref;
+      var error, i, keyPath, len, ref;
       if (value == null) {
         return;
       }
@@ -75,16 +75,14 @@ module.exports = function(TU) {
         if (inArray(shapeKeys, key)) {
           continue;
         }
-        if (global.failure == null) {
-          global.failure = {
-            key: key,
-            value: value,
-            possibleKeys: shapeKeys
-          };
-        }
         keyPath.push(key);
         key = keyPath.join(".");
-        throw TypeError("'" + key + "' is not a valid key.");
+        error = TypeError("'" + key + "' is not a valid key.");
+        reportFailure(error, {
+          key: key,
+          value: value,
+          possibleKeys: shapeKeys
+        });
       }
     };
   });

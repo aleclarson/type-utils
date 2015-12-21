@@ -1,5 +1,6 @@
 
 NamedFunction = require "named-function"
+reportFailure = require "report-failure"
 emptyFunction = require "emptyFunction"
 inArray = require "in-array"
 define = require "define"
@@ -20,16 +21,16 @@ module.exports = (TU) ->
   Kind = Validator "Kind", (type) ->
     NamedFunction type.name + "_Kind", validateKind = (value, key) ->
       return if TU.testKind TU.getType(value), type
-      global.failure ?= { key, value, type }
-      key = if key? then "'#{key}'" else "This property"
-      throw TypeError "#{key} must inherit from #{type.name}."
+      name = if key? then "'#{key}'" else "This property"
+      error = TypeError "#{name} must inherit from #{type.name}."
+      reportFailure error, { key, value, type }
 
   OneOf = Validator "OneOf", (possibleValues) ->
     return validateOneOf = (value, key) ->
       return if inArray possibleValues, value
-      global.failure ?= { key, value, possibleValues }
-      key = if key? then "'#{key}'" else "This property"
-      throw TypeError "#{key} has an invalid value."
+      name = if key? then "'#{key}'" else "This property"
+      error = TypeError "#{name} has an invalid value."
+      reportFailure error, { key, value, possibleValues }
 
   Shape = Validator "Shape", (shape) ->
     shapeKeys = Shape.gatherKeys shape
@@ -40,10 +41,10 @@ module.exports = (TU) ->
       keyPath.push key if key?
       for key in Object.keys value
         continue if inArray shapeKeys, key
-        global.failure ?= { key, value, possibleKeys: shapeKeys }
         keyPath.push key
         key = keyPath.join "."
-        throw TypeError "'#{key}' is not a valid key."
+        error = TypeError "'#{key}' is not a valid key."
+        reportFailure error, { key, value, possibleKeys: shapeKeys }
       return
 
   Shape.gatherKeys = (obj) ->
