@@ -2,8 +2,6 @@
 reportFailure = require "report-failure"
 inArray = require "in-array"
 
-{ getTypeNames } = require "./helpers"
-
 VALUE_TYPES = [ Number, String, Boolean ]
 
 module.exports = (TU) ->
@@ -18,13 +16,6 @@ module.exports = (TU) ->
 
   isKind: (value, type) ->
     value instanceof type
-
-  assertKind: (value, validator, keyPath) ->
-    return if TU.isKind value, validator
-    if keyPath? then prefix = "'#{keyPath}' must inherit from "
-    else prefix = "Expected a kind of "
-    error = TypeError "#{prefix}#{getTypeNames validator}."
-    reportFailure error, { key: keyPath, value, validator }
 
   testKind: (type, kind, compare) ->
     compare ?= TU.compareTypes

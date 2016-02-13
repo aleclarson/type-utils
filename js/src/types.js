@@ -11,7 +11,7 @@ inArray = require("in-array");
 define = require("define");
 
 module.exports = function(TU) {
-  var Kind, Nan, OneOf, Shape, Validator, Void;
+  var Any, AnyValidator, Kind, Nan, OneOf, Shape, Validator, Void;
   Void = NamedFunction("Void", emptyFunction);
   Nan = NamedFunction("Nan", emptyFunction.thatReturns(NaN));
   Validator = NamedFunction("Validator", function(name, constructor) {
@@ -24,11 +24,15 @@ module.exports = function(TU) {
     return TU.setKind(type, Validator);
   });
   TU.setKind(Validator, Function);
+  AnyValidator = Validator("AnyValidator", function() {
+    return NamedFunction("Any", emptyFunction);
+  });
+  Any = AnyValidator();
   Kind = Validator("Kind", function(type) {
     var validateKind;
     return NamedFunction(type.name + "_Kind", validateKind = function(value, key) {
       var error, name;
-      if (TU.testKind(TU.getType(value), type)) {
+      if (TU.isKind(value, type)) {
         return;
       }
       name = key != null ? "'" + key + "'" : "This property";
@@ -105,6 +109,7 @@ module.exports = function(TU) {
   return {
     Void: Void,
     Nan: Nan,
+    Any: Any,
     Kind: Kind,
     OneOf: OneOf,
     Shape: Shape,

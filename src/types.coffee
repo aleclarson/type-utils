@@ -18,9 +18,14 @@ module.exports = (TU) ->
     TU.setKind type, Validator
   TU.setKind Validator, Function
 
+  AnyValidator = Validator "AnyValidator", ->
+    NamedFunction "Any", emptyFunction
+
+  Any = AnyValidator()
+
   Kind = Validator "Kind", (type) ->
     NamedFunction type.name + "_Kind", validateKind = (value, key) ->
-      return if TU.testKind TU.getType(value), type
+      return if TU.isKind value, type
       name = if key? then "'#{key}'" else "This property"
       error = TypeError "#{name} must inherit from #{type.name}."
       reportFailure error, { key, value, type }
@@ -65,6 +70,7 @@ module.exports = (TU) ->
 
   { Void
     Nan
+    Any
     Kind
     OneOf
     Shape

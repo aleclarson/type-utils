@@ -1,22 +1,20 @@
-var define, definitions;
+var define, inits;
 
 require("lotus-require");
 
+inits = [require("./type"), require("./kind"), require("./assertion"), require("./validation"), require("./types")];
+
 define = require("define");
 
-definitions = [require("./type"), require("./kind"), require("./types")];
-
-define(module.exports, function() {
-  var getDefinition, i, len, results;
+define(exports, function() {
+  var i, init, len;
   this.options = {
     frozen: true
   };
-  results = [];
-  for (i = 0, len = definitions.length; i < len; i++) {
-    getDefinition = definitions[i];
-    results.push(this(getDefinition(module.exports)));
+  for (i = 0, len = inits.length; i < len; i++) {
+    init = inits[i];
+    this(init(exports));
   }
-  return results;
 });
 
 exports.any = function(values) {

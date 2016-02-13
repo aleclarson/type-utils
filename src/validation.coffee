@@ -5,46 +5,55 @@ reportFailure = require "report-failure"
 
 module.exports = (TU) ->
 
-  validatorTypeCache = []
+  validatorTypes = []
 
-  validateType = (value, validator, keyPath) ->
-    for config in configs
-      if config.isType validator
-        return config.validate value, validator, keyPath
-    error = TypeError "'validator' has an unexpected type."
-    reportFailure error, { key: keyPath, value, validator }
+  addValidatorType = (config) ->
+    TU.assertKind config.isType, Function
+    TU.assertKind config.validate, Function
+    validatorTypes.unshift config
 
-  validateTypes = (obj, validators, keyPath) ->
-    return unless validators?
-    TU.assertType validators, Object, keyPath
-    for key, validator of validators
+  addValidatorType
+    isType: (type) -> TU.isType type, Array
+    validate: validateWithArray = (value, types, key) ->
+      return if types.length is 0
+      return TU.assertType value, types[0], key if types.length is 1
+      return if TU.isType value, types
+      key = if key? then "'#{key}'" else "This property"
+      typeNames = getTypeNames types
+      error = TypeError "#{key} must be a #{typeNames}"
+      reportFailure error, { key, value, types }
+
+  addValidatorType
+    isType: (type) -> TU.isKind type, Function
+    validate: validateWithFunction = (value, type, key) ->
+      type value, key
+
+  addValidatorType
+    isType: (type) -> TU.isType type, Object
+    validate: validateWithObject = (value, type, key) ->
+      return unless value?
+      TU.assertKind value, Object, key
+      validateTypes value, type, key
+
+  validateType = (value, type, key) ->
+    console.log "Validating: " + key
+    for { isType, validate } in validatorTypes
+      return validate value, type, key if isType type
+    error = TypeError "Invalid validator type!"
+    reportFailure error, { key, value, type }
+
+  validateTypes = (obj, types, keyPath) ->
+    TU.assertKind obj, Object, keyPath
+    TU.assertType types, Object
+    for key, type of types
       value = obj[key]
       key = keyPath + "." + key if keyPath?
-      if TU.isType validator, Object
-        continue unless value?
-        TU.assertKind value, Object, key
-        validateTypes value, validator, key
-      else
-        validateType value, validator, key
+      try validateType value, type, key
+      catch error
+        error.obj = obj
+        error.types = types
+        throw error
     return
-
-  addValidatorType = (type, validate) ->
-    validatorTypeCache.push { type, validate }
-
-  validateWithFunction = (value, validator, keyPath) ->
-    validator value, keyPath
-
-  validateWithArray = (value, types, keyPath) ->
-    return if types.length is 0
-    return TU.assertType value, types[0], keyPath if types.length is 1
-    return if TU.isType value, types
-    keyPath = if keyPath? then "'#{keyPath}'" else "This property"
-    typeNames = getTypeNames types
-    error = TypeError "#{keyPath} must be a #{typeNames}"
-    reportFailure error, { key: keyPath, value, types }
-
-  addValidatorType Function, validateWithFunction
-  addValidatorType Array, validateWithArray
 
   return {
     validateTypes

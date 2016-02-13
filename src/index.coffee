@@ -1,17 +1,19 @@
 
 require "lotus-require"
-define = require "define"
 
-definitions = [
+inits = [
   require "./type"
   require "./kind"
+  require "./assertion"
+  require "./validation"
   require "./types"
 ]
 
-define module.exports, ->
+define = require "define"
+define exports, ->
   @options = frozen: yes
-  for getDefinition in definitions
-    @ getDefinition module.exports
+  @ init exports for init in inits
+  return
 
 exports.any = (values) ->
   return value for value in values when value?

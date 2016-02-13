@@ -5,77 +5,94 @@ reportFailure = require("report-failure");
 getTypeNames = require("./helpers").getTypeNames;
 
 module.exports = function(TU) {
-  var addValidatorType, validateType, validateTypes, validateWithArray, validateWithFunction, validatorTypeCache;
-  validatorTypeCache = [];
-  validateType = function(value, validator, keyPath) {
-    var config, error, i, len;
-    for (i = 0, len = configs.length; i < len; i++) {
-      config = configs[i];
-      if (config.isType(validator)) {
-        return config.validate(value, validator, keyPath);
+  var addValidatorType, validateType, validateTypes, validateWithArray, validateWithFunction, validateWithObject, validatorTypes;
+  validatorTypes = [];
+  addValidatorType = function(config) {
+    TU.assertKind(config.isType, Function);
+    TU.assertKind(config.validate, Function);
+    return validatorTypes.unshift(config);
+  };
+  addValidatorType({
+    isType: function(type) {
+      return TU.isType(type, Array);
+    },
+    validate: validateWithArray = function(value, types, key) {
+      var error, typeNames;
+      if (types.length === 0) {
+        return;
+      }
+      if (types.length === 1) {
+        return TU.assertType(value, types[0], key);
+      }
+      if (TU.isType(value, types)) {
+        return;
+      }
+      key = key != null ? "'" + key + "'" : "This property";
+      typeNames = getTypeNames(types);
+      error = TypeError(key + " must be a " + typeNames);
+      return reportFailure(error, {
+        key: key,
+        value: value,
+        types: types
+      });
+    }
+  });
+  addValidatorType({
+    isType: function(type) {
+      return TU.isKind(type, Function);
+    },
+    validate: validateWithFunction = function(value, type, key) {
+      return type(value, key);
+    }
+  });
+  addValidatorType({
+    isType: function(type) {
+      return TU.isType(type, Object);
+    },
+    validate: validateWithObject = function(value, type, key) {
+      if (value == null) {
+        return;
+      }
+      TU.assertKind(value, Object, key);
+      return validateTypes(value, type, key);
+    }
+  });
+  validateType = function(value, type, key) {
+    var error, i, isType, len, ref, validate;
+    console.log("Validating: " + key);
+    for (i = 0, len = validatorTypes.length; i < len; i++) {
+      ref = validatorTypes[i], isType = ref.isType, validate = ref.validate;
+      if (isType(type)) {
+        return validate(value, type, key);
       }
     }
-    error = TypeError("'validator' has an unexpected type.");
+    error = TypeError("Invalid validator type!");
     return reportFailure(error, {
-      key: keyPath,
+      key: key,
       value: value,
-      validator: validator
+      type: type
     });
   };
-  validateTypes = function(obj, validators, keyPath) {
-    var key, validator, value;
-    if (validators == null) {
-      return;
-    }
-    TU.assertType(validators, Object, keyPath);
-    for (key in validators) {
-      validator = validators[key];
+  validateTypes = function(obj, types, keyPath) {
+    var error, key, type, value;
+    TU.assertKind(obj, Object, keyPath);
+    TU.assertType(types, Object);
+    for (key in types) {
+      type = types[key];
       value = obj[key];
       if (keyPath != null) {
         key = keyPath + "." + key;
       }
-      if (TU.isType(validator, Object)) {
-        if (value == null) {
-          continue;
-        }
-        TU.assertKind(value, Object, key);
-        validateTypes(value, validator, key);
-      } else {
-        validateType(value, validator, key);
+      try {
+        validateType(value, type, key);
+      } catch (_error) {
+        error = _error;
+        error.obj = obj;
+        error.types = types;
+        throw error;
       }
     }
   };
-  addValidatorType = function(type, validate) {
-    return validatorTypeCache.push({
-      type: type,
-      validate: validate
-    });
-  };
-  validateWithFunction = function(value, validator, keyPath) {
-    return validator(value, keyPath);
-  };
-  validateWithArray = function(value, types, keyPath) {
-    var error, typeNames;
-    if (types.length === 0) {
-      return;
-    }
-    if (types.length === 1) {
-      return TU.assertType(value, types[0], keyPath);
-    }
-    if (TU.isType(value, types)) {
-      return;
-    }
-    keyPath = keyPath != null ? "'" + keyPath + "'" : "This property";
-    typeNames = getTypeNames(types);
-    error = TypeError(keyPath + " must be a " + typeNames);
-    return reportFailure(error, {
-      key: keyPath,
-      value: value,
-      types: types
-    });
-  };
-  addValidatorType(Function, validateWithFunction);
-  addValidatorType(Array, validateWithArray);
   return {
     validateTypes: validateTypes,
     addValidatorType: addValidatorType
