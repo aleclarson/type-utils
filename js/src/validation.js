@@ -59,7 +59,6 @@ module.exports = function(TU) {
   });
   validateType = function(value, type, key) {
     var error, i, isType, len, ref, validate;
-    console.log("Validating: " + key);
     for (i = 0, len = validatorTypes.length; i < len; i++) {
       ref = validatorTypes[i], isType = ref.isType, validate = ref.validate;
       if (isType(type)) {

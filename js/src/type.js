@@ -2,6 +2,10 @@ var reportFailure;
 
 reportFailure = require("report-failure");
 
+if (global.Symbol == null) {
+  global.Symbol = {};
+}
+
 module.exports = function(TU) {
   var isNan;
   isNan = function(value, ctr) {
@@ -50,7 +54,9 @@ module.exports = function(TU) {
           type(value);
         } catch (_error) {
           error = _error;
-          error["catch"]();
+          if (typeof error["catch"] === "function") {
+            error["catch"]();
+          }
           return false;
         }
         return true;

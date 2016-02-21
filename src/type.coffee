@@ -1,6 +1,8 @@
 
 reportFailure = require "report-failure"
 
+global.Symbol ?= {}
+
 module.exports = (TU) ->
 
   isNan = (value, ctr) ->
@@ -22,13 +24,17 @@ module.exports = (TU) ->
       types = type
       return yes for type in types when TU.testType value, type, compare
       return no
-    TU.testType value, type, compare
+
+    if (type is null) or TU.isKind type, Function
+      return TU.testType value, type, compare
+
+    throw TypeError "Must pass at least one type (or null) to 'isType'!"
 
   testType: (value, type, compare) ->
     if TU.isKind type, TU.Validator
       try type value
       catch error
-        error.catch()
+        error.catch?()
         return no
       yes
     else

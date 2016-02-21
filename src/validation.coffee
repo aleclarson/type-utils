@@ -36,7 +36,6 @@ module.exports = (TU) ->
       validateTypes value, type, key
 
   validateType = (value, type, key) ->
-    console.log "Validating: " + key
     for { isType, validate } in validatorTypes
       return validate value, type, key if isType type
     error = TypeError "Invalid validator type!"
