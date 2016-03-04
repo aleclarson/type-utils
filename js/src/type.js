@@ -1,7 +1,3 @@
-var reportFailure;
-
-reportFailure = require("report-failure");
-
 if (global.Symbol == null) {
   global.Symbol = {};
 }

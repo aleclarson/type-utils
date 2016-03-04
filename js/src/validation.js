@@ -1,11 +1,11 @@
-var getTypeNames, reportFailure;
+var getTypeNames, throwFailure;
 
-reportFailure = require("report-failure");
+throwFailure = require("failure").throwFailure;
 
 getTypeNames = require("./helpers").getTypeNames;
 
 module.exports = function(TU) {
-  var addValidatorType, validateType, validateTypes, validateWithArray, validateWithFunction, validateWithObject, validatorTypes;
+  var addValidatorType, validateType, validateTypes, validateWithArray, validateWithFunction, validatorTypes;
   validatorTypes = [];
   addValidatorType = function(config) {
     TU.assertKind(config.isType, Function);
@@ -30,7 +30,7 @@ module.exports = function(TU) {
       key = key != null ? "'" + key + "'" : "This property";
       typeNames = getTypeNames(types);
       error = TypeError(key + " must be a " + typeNames);
-      return reportFailure(error, {
+      return throwFailure(error, {
         key: key,
         value: value,
         types: types
@@ -45,18 +45,6 @@ module.exports = function(TU) {
       return type(value, key);
     }
   });
-  addValidatorType({
-    isType: function(type) {
-      return TU.isType(type, Object);
-    },
-    validate: validateWithObject = function(value, type, key) {
-      if (value == null) {
-        return;
-      }
-      TU.assertKind(value, Object, key);
-      return validateTypes(value, type, key);
-    }
-  });
   validateType = function(value, type, key) {
     var error, i, isType, len, ref, validate;
     for (i = 0, len = validatorTypes.length; i < len; i++) {
@@ -66,7 +54,7 @@ module.exports = function(TU) {
       }
     }
     error = TypeError("Invalid validator type!");
-    return reportFailure(error, {
+    return throwFailure(error, {
       key: key,
       value: value,
       type: type
@@ -86,9 +74,10 @@ module.exports = function(TU) {
         validateType(value, type, key);
       } catch (_error) {
         error = _error;
-        error.obj = obj;
-        error.types = types;
-        throw error;
+        throwFailure(error, {
+          obj: obj,
+          types: types
+        });
       }
     }
   };

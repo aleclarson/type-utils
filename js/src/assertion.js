@@ -1,6 +1,6 @@
-var getTypeNames, reportFailure;
+var getTypeNames, throwFailure;
 
-reportFailure = require("report-failure");
+throwFailure = require("failure").throwFailure;
 
 getTypeNames = require("./helpers").getTypeNames;
 
@@ -17,12 +17,12 @@ module.exports = function(TU) {
         delete data.reason;
       }
       error = Error(reason != null ? reason : reason = "Assertion failed.");
-      return reportFailure(error, data);
+      return throwFailure(error, data);
     },
     assertType: function(value, type, key) {
       var data, error, passed;
       if (TU.isKind(type, TU.Validator)) {
-        return type(value);
+        return type(value, key);
       }
       try {
         passed = TU.isType(value, type);
@@ -36,7 +36,7 @@ module.exports = function(TU) {
       data.value = value;
       data.type = type;
       error = TypeError(data.key != null ? "'" + data.key + "' must be a " + (getTypeNames(type)) + "." : "Expected a " + (getTypeNames(type)) + ".");
-      return reportFailure(error, data);
+      return throwFailure(error, data);
     },
     assertReturnType: function(value, type, key) {
       var data, error, passed;
@@ -52,7 +52,7 @@ module.exports = function(TU) {
       data.value = value;
       data.type = type;
       error = TypeError(data.key != null ? "'" + data.key + "' must return a " + (getTypeNames(type)) + "." : "Expected a " + (getTypeNames(type)) + " to be returned.");
-      return reportFailure(error, data);
+      return throwFailure(error, data);
     },
     assertKind: function(value, type, key) {
       var data, error;
@@ -65,7 +65,7 @@ module.exports = function(TU) {
       data.value = value;
       data.type = type;
       error = TypeError(data.key != null ? "'" + data.key + "' must inherit from " + (getTypeNames(type)) + "." : "Expected a kind of " + (getTypeNames(type)) + ".");
-      return reportFailure(error, data);
+      return throwFailure(error, data);
     }
   };
 };

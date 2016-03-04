@@ -1,5 +1,5 @@
 
-reportFailure = require "report-failure"
+{ throwFailure } = require "failure"
 
 { getTypeNames } = require "./helpers"
 
@@ -21,25 +21,18 @@ module.exports = (TU) ->
       key = if key? then "'#{key}'" else "This property"
       typeNames = getTypeNames types
       error = TypeError "#{key} must be a #{typeNames}"
-      reportFailure error, { key, value, types }
+      throwFailure error, { key, value, types }
 
   addValidatorType
     isType: (type) -> TU.isKind type, Function
     validate: validateWithFunction = (value, type, key) ->
       type value, key
 
-  addValidatorType
-    isType: (type) -> TU.isType type, Object
-    validate: validateWithObject = (value, type, key) ->
-      return unless value?
-      TU.assertKind value, Object, key
-      validateTypes value, type, key
-
   validateType = (value, type, key) ->
     for { isType, validate } in validatorTypes
       return validate value, type, key if isType type
     error = TypeError "Invalid validator type!"
-    reportFailure error, { key, value, type }
+    throwFailure error, { key, value, type }
 
   validateTypes = (obj, types, keyPath) ->
     TU.assertKind obj, Object, keyPath
@@ -48,10 +41,7 @@ module.exports = (TU) ->
       value = obj[key]
       key = keyPath + "." + key if keyPath?
       try validateType value, type, key
-      catch error
-        error.obj = obj
-        error.types = types
-        throw error
+      catch error then throwFailure error, { obj, types }
     return
 
   return {

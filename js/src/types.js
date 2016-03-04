@@ -1,8 +1,8 @@
-var NamedFunction, define, emptyFunction, inArray, reportFailure;
+var NamedFunction, define, emptyFunction, inArray, throwFailure;
+
+throwFailure = require("failure").throwFailure;
 
 NamedFunction = require("named-function");
-
-reportFailure = require("report-failure");
 
 emptyFunction = require("emptyFunction");
 
@@ -11,9 +11,11 @@ inArray = require("in-array");
 define = require("define");
 
 module.exports = function(TU) {
-  var Any, AnyValidator, Kind, Nan, OneOf, Shape, Validator, Void;
-  Void = NamedFunction("Void", emptyFunction);
-  Nan = NamedFunction("Nan", emptyFunction.thatReturns(NaN));
+  var Any, AnyValidator, ArrayOf, Kind, Nan, OneOf, Shape, Validator, Void;
+  Void = NamedFunction("Void", function() {});
+  Nan = NamedFunction("Nan", function() {
+    return NaN;
+  });
   Validator = NamedFunction("Validator", function(name, constructor) {
     var type;
     type = NamedFunction(name, function() {
@@ -25,7 +27,7 @@ module.exports = function(TU) {
   });
   TU.setKind(Validator, Function);
   AnyValidator = Validator("AnyValidator", function() {
-    return NamedFunction("Any", emptyFunction);
+    return NamedFunction("Any", function() {});
   });
   Any = AnyValidator();
   Kind = Validator("Kind", function(type) {
@@ -37,7 +39,7 @@ module.exports = function(TU) {
       }
       name = key != null ? "'" + key + "'" : "This property";
       error = TypeError(name + " must inherit from " + type.name + ".");
-      return reportFailure(error, {
+      return throwFailure(error, {
         key: key,
         value: value,
         type: type
@@ -53,7 +55,7 @@ module.exports = function(TU) {
       }
       name = key != null ? "'" + key + "'" : "This property";
       error = TypeError(name + " has an invalid value.");
-      return reportFailure(error, {
+      return throwFailure(error, {
         key: key,
         value: value,
         possibleValues: possibleValues
@@ -61,58 +63,43 @@ module.exports = function(TU) {
     };
   });
   Shape = Validator("Shape", function(shape) {
-    var shapeKeys, validateShape;
-    shapeKeys = Shape.gatherKeys(shape);
+    var validateShape;
+    TU.assertType(shape, Object);
     return validateShape = function(value, key) {
-      var error, i, keyPath, len, ref;
-      if (value == null) {
-        return;
-      }
       TU.assertType(value, Object, key);
-      keyPath = [];
-      if (key != null) {
-        keyPath.push(key);
+      return TU.validateTypes(value, shape, key);
+    };
+  });
+  ArrayOf = Validator("ArrayOf", function(types) {
+    var validateArray;
+    return validateArray = function(array, key) {
+      var error, index, value;
+      if (key == null) {
+        key = "array";
       }
-      ref = Object.keys(value);
-      for (i = 0, len = ref.length; i < len; i++) {
-        key = ref[i];
-        if (inArray(shapeKeys, key)) {
-          continue;
+      TU.assertType(array, Array, key);
+      for (index in array) {
+        value = array[index];
+        try {
+          TU.assertType(value, types, key + "[" + index + "]");
+        } catch (_error) {
+          error = _error;
+          throwFailure(error, {
+            index: index,
+            array: array
+          });
         }
-        keyPath.push(key);
-        key = keyPath.join(".");
-        error = TypeError("'" + key + "' is not a valid key.");
-        reportFailure(error, {
-          key: key,
-          value: value,
-          possibleKeys: shapeKeys
-        });
       }
     };
   });
-  Shape.gatherKeys = function(obj) {
-    var array, i, keys, len;
-    if (TU.isType(obj, Array)) {
-      array = obj;
-      keys = [];
-      for (i = 0, len = array.length; i < len; i++) {
-        obj = array[i];
-        keys = keys.concat(Shape.gatherKeys(obj));
-      }
-      return keys;
-    } else if (TU.isKind(obj, Object)) {
-      return keys = Object.keys(obj);
-    } else {
-      throw TypeError("Expected an Object or Array.");
-    }
-  };
   return {
-    Void: Void,
-    Nan: Nan,
     Any: Any,
+    Nan: Nan,
+    Void: Void,
     Kind: Kind,
     OneOf: OneOf,
     Shape: Shape,
+    ArrayOf: ArrayOf,
     Validator: Validator
   };
 };

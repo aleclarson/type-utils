@@ -1,15 +1,16 @@
 
+{ throwFailure } = require "failure"
+
 NamedFunction = require "named-function"
-reportFailure = require "report-failure"
 emptyFunction = require "emptyFunction"
 inArray = require "in-array"
 define = require "define"
 
 module.exports = (TU) ->
 
-  Void = NamedFunction "Void", emptyFunction
+  Void = NamedFunction "Void", -> # no-op
 
-  Nan = NamedFunction "Nan", emptyFunction.thatReturns NaN
+  Nan = NamedFunction "Nan", -> NaN
 
   Validator = NamedFunction "Validator", (name, constructor) ->
     type = NamedFunction name, ->
@@ -19,7 +20,7 @@ module.exports = (TU) ->
   TU.setKind Validator, Function
 
   AnyValidator = Validator "AnyValidator", ->
-    NamedFunction "Any", emptyFunction
+    NamedFunction "Any", -> # no-op
 
   Any = AnyValidator()
 
@@ -28,50 +29,38 @@ module.exports = (TU) ->
       return if TU.isKind value, type
       name = if key? then "'#{key}'" else "This property"
       error = TypeError "#{name} must inherit from #{type.name}."
-      reportFailure error, { key, value, type }
+      throwFailure error, { key, value, type }
 
   OneOf = Validator "OneOf", (possibleValues) ->
     return validateOneOf = (value, key) ->
       return if inArray possibleValues, value
       name = if key? then "'#{key}'" else "This property"
       error = TypeError "#{name} has an invalid value."
-      reportFailure error, { key, value, possibleValues }
+      throwFailure error, { key, value, possibleValues }
 
   Shape = Validator "Shape", (shape) ->
-    shapeKeys = Shape.gatherKeys shape
+    TU.assertType shape, Object
     return validateShape = (value, key) ->
-      return unless value?
       TU.assertType value, Object, key
-      keyPath = []
-      keyPath.push key if key?
-      for key in Object.keys value
-        continue if inArray shapeKeys, key
-        keyPath.push key
-        key = keyPath.join "."
-        error = TypeError "'#{key}' is not a valid key."
-        reportFailure error, { key, value, possibleKeys: shapeKeys }
-      return
+      TU.validateTypes value, shape, key
 
-  Shape.gatherKeys = (obj) ->
-    if TU.isType obj, Array
-      array = obj
-      keys = []
-      for obj in array
-        keys = keys.concat Shape.gatherKeys obj
-      keys
-    else if TU.isKind obj, Object
-      keys = Object.keys obj
-    else
-      throw TypeError "Expected an Object or Array."
+  ArrayOf = Validator "ArrayOf", (types) ->
+    return validateArray = (array, key = "array") ->
+      TU.assertType array, Array, key
+      for index, value of array
+        try TU.assertType value, types, key + "[" + index + "]"
+        catch error then throwFailure error, { index, array }
+      return
 
 #
 # Exports
 #
 
-  { Void
+  { Any
     Nan
-    Any
+    Void
     Kind
     OneOf
     Shape
+    ArrayOf
     Validator }

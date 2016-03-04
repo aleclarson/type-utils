@@ -1,5 +1,5 @@
 
-reportFailure = require "report-failure"
+{ throwFailure } = require "failure"
 
 { getTypeNames } = require "./helpers"
 
@@ -12,11 +12,11 @@ module.exports = (TU) ->
       reason = data.reason
       delete data.reason
     error = Error reason ?= "Assertion failed."
-    reportFailure error, data
+    throwFailure error, data
 
   assertType: (value, type, key) ->
 
-    return type value if TU.isKind type, TU.Validator
+    return type value, key if TU.isKind type, TU.Validator
     try passed = TU.isType value, type
     return if passed is yes
 
@@ -27,7 +27,7 @@ module.exports = (TU) ->
       if data.key? then "'#{data.key}' must be a #{getTypeNames type}."
       else "Expected a #{getTypeNames type}."
     )
-    reportFailure error, data
+    throwFailure error, data
 
   assertReturnType: (value, type, key) ->
 
@@ -41,7 +41,7 @@ module.exports = (TU) ->
       if data.key? then "'#{data.key}' must return a #{getTypeNames type}."
       else "Expected a #{getTypeNames type} to be returned."
     )
-    reportFailure error, data
+    throwFailure error, data
 
   assertKind: (value, type, key) ->
 
@@ -54,4 +54,4 @@ module.exports = (TU) ->
       if data.key? then "'#{data.key}' must inherit from #{getTypeNames type}."
       else "Expected a kind of #{getTypeNames type}."
     )
-    reportFailure error, data
+    throwFailure error, data

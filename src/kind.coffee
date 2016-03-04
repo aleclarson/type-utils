@@ -1,5 +1,4 @@
 
-reportFailure = require "report-failure"
 inArray = require "in-array"
 
 VALUE_TYPES = [ Number, String, Boolean ]

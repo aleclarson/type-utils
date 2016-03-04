@@ -1,6 +1,4 @@
 
-reportFailure = require "report-failure"
-
 global.Symbol ?= {}
 
 module.exports = (TU) ->

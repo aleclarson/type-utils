@@ -1,6 +1,4 @@
-var VALUE_TYPES, inArray, reportFailure;
-
-reportFailure = require("report-failure");
+var VALUE_TYPES, inArray;
 
 inArray = require("in-array");
 
