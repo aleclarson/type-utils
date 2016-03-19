@@ -1,45 +1,31 @@
-describe("getKind(Type)", function() {
-  var getKind;
-  getKind = require("../src").getKind;
-  it("returns the super-type of the given type", function() {
+var Kind, getKind, isKind, ref, setKind;
+
+ref = require("../src"), Kind = ref.Kind, isKind = ref.isKind, getKind = ref.getKind, setKind = ref.setKind;
+
+describe("getKind()", function() {
+  it("returns null when Object is passed", function() {
+    return expect(getKind(Object)).toBe(null);
+  });
+  it("returns Object when Function is passed", function() {
     return expect(getKind(Function)).toBe(Object);
   });
-  return it("returns null when Object is passed", function() {
-    return expect(getKind(Object)).toBe(null);
+  return it("return Object when Array is passed", function() {
+    return expect(getKind(Array)).toBe(Object);
   });
 });
 
 describe("setKind()", function() {
-  var getKind, ref, setKind;
-  ref = require("../src"), getKind = ref.getKind, setKind = ref.setKind;
   it("sets the super-type of the given type", function() {
-    var A, B;
+    var A;
     A = function() {};
-    B = function() {};
-    setKind(A, B);
-    return expect(getKind(A)).toBe(B);
+    setKind(A, Function);
+    return expect(getKind(A)).toBe(Function);
   });
-  return it("returns the given type", function() {
-    var A, B;
+  return it("returns the first argument", function() {
+    var A;
     A = function() {};
-    B = function() {};
-    return expect(setKind(A, B)).toBe(A);
+    return expect(setKind(A, Function)).toBe(A);
   });
-});
-
-describe("testKind", function() {
-  var ref, testKind;
-  return ref = require("../src"), testKind = ref.testKind, ref;
-});
-
-describe("getKinds", function() {
-  var getKinds, ref;
-  return ref = require("../src"), getKinds = ref.getKinds, ref;
-});
-
-describe("Kind", function() {
-  var Kind, ref;
-  return ref = require("../src"), Kind = ref.Kind, ref;
 });
 
 //# sourceMappingURL=../../map/spec/kind.map

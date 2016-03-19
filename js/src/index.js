@@ -17,14 +17,4 @@ define(exports, function() {
   }
 });
 
-exports.any = function(values) {
-  var i, len, value;
-  for (i = 0, len = values.length; i < len; i++) {
-    value = values[i];
-    if (value != null) {
-      return value;
-    }
-  }
-};
-
 //# sourceMappingURL=../../map/src/index.map

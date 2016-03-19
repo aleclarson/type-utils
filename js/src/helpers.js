@@ -4,7 +4,7 @@ exports.getTypeNames = function(types) {
     return types.name;
   }
   typeNames = types.map(function(type) {
-    return type.name;
+    return type != null ? type.name : void 0;
   });
   switch (typeNames.length) {
     case 1:

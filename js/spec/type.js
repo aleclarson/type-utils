@@ -1,31 +1,62 @@
-describe("getType(Any)", function() {
-  var Void, getType, ref;
-  ref = require("../src"), getType = ref.getType, Void = ref.Void;
-  it("returns the constructor of a defined value", function() {
-    var i, len, ref1, results, value;
-    ref1 = [100, "hi", true, Object, {}, [], /[a-z]/g];
-    results = [];
-    for (i = 0, len = ref1.length; i < len; i++) {
-      value = ref1[i];
-      results.push(expect(getType(value)).toBe(value.constructor));
-    }
-    return results;
+var Nan, Null, Void, getType, ref, setType, testType, validateTypes;
+
+ref = require("../src"), Void = ref.Void, Null = ref.Null, Nan = ref.Nan, getType = ref.getType, setType = ref.setType, testType = ref.testType, validateTypes = ref.validateTypes;
+
+describe("getType()", function() {
+  it("returns Void for undefined", function() {
+    return expect(getType(void 0)).toBe(Void);
   });
-  return it("returns Void for null and undefined values", function() {
-    var i, len, ref1, results, value;
-    ref1 = [null, void 0];
-    results = [];
+  it("returns Null for null", function() {
+    return expect(getType(null)).toBe(Null);
+  });
+  it("returns Boolean for boolean literals", function() {
+    var i, len, ref1, value;
+    ref1 = [true, false];
     for (i = 0, len = ref1.length; i < len; i++) {
       value = ref1[i];
-      results.push(expect(getType(value)).toBe(Void));
+      expect(getType(value)).toBe(Boolean);
     }
-    return results;
+  });
+  it("returns Number for numeric literals", function() {
+    var i, len, ref1, value;
+    ref1 = [Infinity, -1, 0, 1, Math.PI];
+    for (i = 0, len = ref1.length; i < len; i++) {
+      value = ref1[i];
+      expect(getType(value)).toBe(Number);
+    }
+  });
+  it("returns String for string literals", function() {
+    var i, len, ref1, value;
+    ref1 = ["", "1", "a"];
+    for (i = 0, len = ref1.length; i < len; i++) {
+      value = ref1[i];
+      expect(getType(value)).toBe(String);
+    }
+  });
+  it("returns Object for object literals", function() {
+    return expect(getType({})).toBe(Object);
+  });
+  it("returns Array for array literals", function() {
+    return expect(getType([])).toBe(Array);
+  });
+  it("returns null for Object.create(null)", function() {
+    return expect(getType(Object.create(null))).toBe(null);
+  });
+  it("returns Nan for number errors", function() {
+    return expect(getType(1 - global)).toBe(Nan);
+  });
+  it("returns RegExp for regular expressions", function() {
+    return expect(getType(/.*/)).toBe(RegExp);
+  });
+  it("returns Object for Object.prototype", function() {
+    return expect(getType(Object.prototype)).toBe(Object);
+  });
+  return it("returns Function for Function.prototype", function() {
+    return expect(getType(Function.prototype)).toBe(Function);
   });
 });
 
-describe("setType(Any, Type)", function() {
-  var setType;
-  setType = require("../src").setType;
+describe("setType()", function() {
   it("sets the constructor and __proto__ of an Object.Kind", function() {
     var obj, result;
     obj = {};
@@ -46,9 +77,7 @@ describe("setType(Any, Type)", function() {
   });
 });
 
-describe("testType(Any, Type)", function() {
-  var testType;
-  testType = require("../src").testType;
+describe("testType()", function() {
   it("returns true if the given value is the given type", function() {
     return expect(testType(true, Boolean)).toBe(true);
   });
@@ -57,9 +86,7 @@ describe("testType(Any, Type)", function() {
   });
 });
 
-describe("validateTypes(Object.Kind, Object)", function() {
-  var validateTypes;
-  validateTypes = require("../src/index").validateTypes;
+describe("validateTypes()", function() {
   it("throws a TypeError if the given object doesnt match the given spec", function() {
     var error, obj, result, spec;
     obj = {
@@ -77,7 +104,7 @@ describe("validateTypes(Object.Kind, Object)", function() {
     }
     return expect(result.error != null).toBe(true);
   });
-  it("does not throw a TypeError if the given object mathces the given spec", function() {
+  it("does not throw a TypeError if the given object matches the given spec", function() {
     var error, obj, result, spec;
     obj = {
       a: 1
@@ -115,11 +142,6 @@ describe("validateTypes(Object.Kind, Object)", function() {
     }
     return expect(result.error != null).toBe(true);
   });
-});
-
-describe("compareTypes(Type, Type)", function() {
-  var compareTypes, ref;
-  return ref = require("../src"), compareTypes = ref.compareTypes, ref;
 });
 
 //# sourceMappingURL=../../map/spec/type.map

@@ -11,8 +11,11 @@ inArray = require("in-array");
 define = require("define");
 
 module.exports = function(TU) {
-  var Any, AnyValidator, ArrayOf, Kind, Nan, OneOf, Shape, Validator, Void;
+  var Any, AnyValidator, ArrayOf, Kind, Nan, Null, OneOf, Shape, Validator, Void;
   Void = NamedFunction("Void", function() {});
+  Null = NamedFunction("Null", function() {
+    return null;
+  });
   Nan = NamedFunction("Nan", function() {
     return NaN;
   });
@@ -94,8 +97,9 @@ module.exports = function(TU) {
   });
   return {
     Any: Any,
-    Nan: Nan,
     Void: Void,
+    Null: Null,
+    Nan: Nan,
     Kind: Kind,
     OneOf: OneOf,
     Shape: Shape,

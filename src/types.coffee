@@ -10,6 +10,8 @@ module.exports = (TU) ->
 
   Void = NamedFunction "Void", -> # no-op
 
+  Null = NamedFunction "Null", -> null
+
   Nan = NamedFunction "Nan", -> NaN
 
   Validator = NamedFunction "Validator", (name, constructor) ->
@@ -57,8 +59,9 @@ module.exports = (TU) ->
 #
 
   { Any
-    Nan
     Void
+    Null
+    Nan
     Kind
     OneOf
     Shape

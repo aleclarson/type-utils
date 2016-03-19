@@ -6,8 +6,10 @@ VALUE_TYPES = [ Number, String, Boolean ]
 module.exports = (TU) ->
 
   getKind: (type) ->
-    return null if !type? or type is Object
-    TU.getType type.prototype.__proto__
+    prototype = type and type.prototype
+    TU.assert prototype, "Expected a constructor type!"
+    return null if type is Object
+    TU.getType prototype.__proto__
 
   setKind: (type, kind) ->
     TU.setType type.prototype, kind

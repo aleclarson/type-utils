@@ -1,32 +1,27 @@
 
-describe "getKind(Type)", ->
-  { getKind } = require "../src"
+{ Kind
+  isKind
+  getKind
+  setKind } = require "../src"
 
-  it "returns the super-type of the given type", ->
-    expect(getKind Function).toBe Object
+describe "getKind()", ->
 
   it "returns null when Object is passed", ->
     expect(getKind Object).toBe null
 
+  it "returns Object when Function is passed", ->
+    expect(getKind Function).toBe Object
+
+  it "return Object when Array is passed", ->
+    expect(getKind Array).toBe Object
+
 describe "setKind()", ->
-  { getKind, setKind } = require "../src"
 
   it "sets the super-type of the given type", ->
     A = ->
-    B = ->
-    setKind A, B
-    expect(getKind A).toBe B
+    setKind A, Function
+    expect(getKind A).toBe Function
 
-  it "returns the given type", ->
+  it "returns the first argument", ->
     A = ->
-    B = ->
-    expect(setKind A, B).toBe A
-
-describe "testKind", ->
-  { testKind } = require "../src"
-
-describe "getKinds", ->
-  { getKinds } = require "../src"
-
-describe "Kind", ->
-  { Kind } = require "../src"
+    expect(setKind A, Function).toBe A

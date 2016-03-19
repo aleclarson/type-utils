@@ -1,17 +1,22 @@
 
 global.Symbol ?= {}
 
+checkNanSafely = (value, ctr) ->
+  return no if not isNaN value
+  return no if value instanceof Object
+  return no if value is ctr.prototype
+  return no if ctr is String
+  return no if ctr is Symbol
+  return yes
+
 module.exports = (TU) ->
 
-  isNan = (value, ctr) ->
-    return no if (ctr is Object) or (ctr is String) or (ctr is Symbol) or (TU.isKind value, Object)
-    return isNaN value
-
   getType: (value) ->
-    return TU.Void unless value?
+    return TU.Void if value is undefined
+    return TU.Null if value is null
     ctr = value.constructor
-    return null unless ctr?
-    return TU.Nan if isNan value, ctr
+    return null unless ctr
+    return TU.Nan if checkNanSafely value, ctr
     return ctr
 
   setType: require "set-type"

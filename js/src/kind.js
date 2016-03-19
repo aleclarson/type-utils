@@ -7,10 +7,13 @@ VALUE_TYPES = [Number, String, Boolean];
 module.exports = function(TU) {
   return {
     getKind: function(type) {
-      if ((type == null) || type === Object) {
+      var prototype;
+      prototype = type && type.prototype;
+      TU.assert(prototype, "Expected a constructor type!");
+      if (type === Object) {
         return null;
       }
-      return TU.getType(type.prototype.__proto__);
+      return TU.getType(prototype.__proto__);
     },
     setKind: function(type, kind) {
       TU.setType(type.prototype, kind);

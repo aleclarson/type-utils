@@ -1,26 +1,43 @@
+var checkNanSafely;
+
 if (global.Symbol == null) {
   global.Symbol = {};
 }
 
+checkNanSafely = function(value, ctr) {
+  if (!isNaN(value)) {
+    return false;
+  }
+  if (value instanceof Object) {
+    return false;
+  }
+  if (value === ctr.prototype) {
+    return false;
+  }
+  if (ctr === String) {
+    return false;
+  }
+  if (ctr === Symbol) {
+    return false;
+  }
+  return true;
+};
+
 module.exports = function(TU) {
-  var isNan;
-  isNan = function(value, ctr) {
-    if ((ctr === Object) || (ctr === String) || (ctr === Symbol) || (TU.isKind(value, Object))) {
-      return false;
-    }
-    return isNaN(value);
-  };
   return {
     getType: function(value) {
       var ctr;
-      if (value == null) {
+      if (value === void 0) {
         return TU.Void;
       }
+      if (value === null) {
+        return TU.Null;
+      }
       ctr = value.constructor;
-      if (ctr == null) {
+      if (!ctr) {
         return null;
       }
-      if (isNan(value, ctr)) {
+      if (checkNanSafely(value, ctr)) {
         return TU.Nan;
       }
       return ctr;

@@ -14,7 +14,3 @@ define exports, ->
   @options = frozen: yes
   @ init exports for init in inits
   return
-
-exports.any = (values) ->
-  return value for value in values when value?
-  return

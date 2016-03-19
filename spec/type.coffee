@@ -1,19 +1,57 @@
 
-describe "getType(Any)", ->
+{ Void
+  Null
+  Nan
+  getType
+  setType
+  testType
+  validateTypes } = require "../src"
 
-  { getType, Void } = require "../src"
+describe "getType()", ->
 
-  it "returns the constructor of a defined value", ->
-    for value in [100, "hi", yes, Object, {}, [], /[a-z]/g]
-      expect(getType value).toBe value.constructor
+  it "returns Void for undefined", ->
+    expect(getType undefined).toBe Void
 
-  it "returns Void for null and undefined values", ->
-    for value in [null, undefined]
-      expect(getType value).toBe Void
+  it "returns Null for null", ->
+    expect(getType null).toBe Null
 
-describe "setType(Any, Type)", ->
+  it "returns Boolean for boolean literals", ->
+    for value in [ yes, no ]
+      expect(getType value).toBe Boolean
+    return
 
-  { setType } = require "../src"
+  it "returns Number for numeric literals", ->
+    for value in [ Infinity, -1, 0, 1, Math.PI ]
+      expect(getType value).toBe Number
+    return
+
+  it "returns String for string literals", ->
+    for value in [ "", "1", "a" ]
+      expect(getType value).toBe String
+    return
+
+  it "returns Object for object literals", ->
+    expect(getType {}).toBe Object
+
+  it "returns Array for array literals", ->
+    expect(getType []).toBe Array
+
+  it "returns null for Object.create(null)", ->
+    expect(getType Object.create null).toBe null
+
+  it "returns Nan for number errors", ->
+    expect(getType 1 - global).toBe Nan
+
+  it "returns RegExp for regular expressions", ->
+    expect(getType /.*/).toBe RegExp
+
+  it "returns Object for Object.prototype", ->
+    expect(getType Object.prototype).toBe Object
+
+  it "returns Function for Function.prototype", ->
+    expect(getType Function.prototype).toBe Function
+
+describe "setType()", ->
 
   it "sets the constructor and __proto__ of an Object.Kind", ->
     obj = {}
@@ -29,9 +67,7 @@ describe "setType(Any, Type)", ->
     catch error
     expect(error?).toBe no
 
-describe "testType(Any, Type)", ->
-
-  { testType } = require "../src"
+describe "testType()", ->
 
   it "returns true if the given value is the given type", ->
     expect(testType yes, Boolean).toBe yes
@@ -39,9 +75,7 @@ describe "testType(Any, Type)", ->
   it "returns false if the given value isn't the given type", ->
     expect(testType no, String).toBe no
 
-describe "validateTypes(Object.Kind, Object)", ->
-
-  { validateTypes } = require "../src/index"
+describe "validateTypes()", ->
 
   it "throws a TypeError if the given object doesnt match the given spec", ->
     obj = { a: 1 }
@@ -51,7 +85,7 @@ describe "validateTypes(Object.Kind, Object)", ->
     catch error then result.error = error
     expect(result.error?).toBe yes
 
-  it "does not throw a TypeError if the given object mathces the given spec", ->
+  it "does not throw a TypeError if the given object matches the given spec", ->
     obj = { a: 1 }
     spec = { a: [ Number ] }
     result = {}
@@ -66,9 +100,3 @@ describe "validateTypes(Object.Kind, Object)", ->
     try validateTypes obj, spec
     catch error then result.error = error
     expect(result.error?).toBe yes
-
-describe "compareTypes(Type, Type)", ->
-
-  { compareTypes } = require "../src"
-
-  # it "takes "
