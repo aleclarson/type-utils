@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "setKind.js",
+  "sourceRoot": "../../../src/core",
+  "sources": [
+    "setKind.coffee"
+  ],
+  "names": [],
+  "mappings": "AACA,IAAA;;AAAA,OAAA,GAAU,OAAA,CAAQ,WAAR;;AAEV,MAAM,CAAC,OAAP,GAAiB,SAAC,IAAD,EAAO,IAAP;AACf,MAAA;EAAA,SAAA,GAAY,IAAA,IAAS,IAAI,CAAC;EAC1B,OAAA,CAAQ,SAAR,EAAmB,IAAnB;AACA,SAAO;AAHQ"
+}

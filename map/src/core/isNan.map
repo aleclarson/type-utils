@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "isNan.js",
+  "sourceRoot": "../../../src/core",
+  "sources": [
+    "isNan.coffee"
+  ],
+  "names": [],
+  "mappings": "AACA,MAAM,CAAC,OAAP,GAAiB,SAAC,KAAD,EAAQ,GAAR;EACf,IAAa,GAAA,KAAS,MAAtB;AAAA,WAAO,MAAP;;AACA,SAAO,KAAA,CAAM,KAAN;AAFQ"
+}

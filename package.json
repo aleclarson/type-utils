@@ -4,13 +4,11 @@
   "version": "1.0.0",
   "main": "js/src/index.js",
   "dependencies": {
-    "define": "aleclarson/define#1.0.0",
-    "emptyFunction": "aleclarson/emptyFunction#1.0.0",
     "failure": "aleclarson/failure#1.0.0",
     "in-array": "^0.1.0",
     "lotus-require": "aleclarson/lotus-require#1.0.0",
     "named-function": "aleclarson/named-function#1.0.3",
-    "set-type": "aleclarson/set-type#1.0.0"
+    "setType": "aleclarson/setType#1.0.0"
   },
   "repository": {
     "type": "git",

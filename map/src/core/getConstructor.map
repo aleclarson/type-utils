@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "getConstructor.js",
+  "sourceRoot": "../../../src/core",
+  "sources": [
+    "getConstructor.coffee"
+  ],
+  "names": [],
+  "mappings": "AACA,IAAA;;AAAA,KAAA,GAAQ,OAAA,CAAQ,SAAR;;AACR,GAAA,GAAM,OAAA,CAAQ,cAAR;;AAEN,MAAM,CAAC,OAAP,GAAiB,SAAC,KAAD;AACf,MAAA;EAAA,GAAA,GAAM,KAAK,CAAC;EACZ,IAAA,CAAmB,GAAnB;AAAA,WAAO,KAAP;;EACA,IAAc,KAAA,CAAM,KAAN,EAAa,GAAb,CAAd;AAAA,WAAO,IAAP;;AACA,SAAO;AAJQ"
+}

@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "Nan.js",
+  "sourceRoot": "../../../src/types",
+  "sources": [
+    "Nan.coffee"
+  ],
+  "names": [],
+  "mappings": "AACA,IAAA;;AAAA,aAAA,GAAgB,OAAA,CAAQ,gBAAR;;AAEhB,MAAM,CAAC,OAAP,GAAiB,aAAA,CAAc,KAAd,EAAqB,SAAA;SAAG;AAAH,CAArB"
+}

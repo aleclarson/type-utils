@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "setType.js",
+  "sourceRoot": "../../../src/core",
+  "sources": [
+    "setType.coffee"
+  ],
+  "names": [],
+  "mappings": "AACA,MAAM,CAAC,OAAP,GAAiB,OAAA,CAAQ,SAAR"
+}
