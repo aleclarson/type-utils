@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "Shape.js",
+  "sourceRoot": "../../spec",
+  "sources": [
+    "Shape.coffee"
+  ],
+  "names": [],
+  "mappings": ""
+}

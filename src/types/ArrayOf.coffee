@@ -1,11 +1,14 @@
 
 { throwFailure } = require "failure"
 
+formatType = require "../core/formatType"
 errorTypes = require "../errorTypes"
-Validator = require "../types/Validator"
+Validator = require "./Validator"
 isType = require "../core/isType"
 
-module.exports = Validator.Type "ArrayOf", (types) ->
+module.exports = Validator.Type "ArrayOf", (type) ->
+
+  getName: -> "an array of " + formatType type
 
   validate: (array, key = "array") ->
 
@@ -13,9 +16,9 @@ module.exports = Validator.Type "ArrayOf", (types) ->
       return { key, value: array, type: Array }
 
     for index, value of array
-      continue if isType value, types
+      continue if isType value, type
       key += "[#{index}]"
-      return { key, value, type: types }
+      return { key, value, type }
 
     return yes
 

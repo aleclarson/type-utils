@@ -1,12 +1,15 @@
 
 { throwFailure } = require "failure"
 
+formatType = require "../core/formatType"
 errorTypes = require "../errorTypes"
-Validator = require "../types/Validator"
+Validator = require "./Validator"
 isType = require "../core/isType"
 Void = require "../types/Void"
 
 module.exports = Validator.Type "Maybe", (type) ->
+
+  getName: -> formatType(type) + "?"
 
   validate: (value, key) ->
     return yes if value is undefined

@@ -1,8 +1,10 @@
 
-Validator = require "../types/Validator"
+Validator = require "./Validator"
 
 module.exports =
 Null = Validator "Null",
+
+  getName: -> "null"
 
   validate: (value, key) ->
     return yes if value is null

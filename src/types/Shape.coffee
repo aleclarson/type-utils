@@ -4,12 +4,17 @@
 isConstructor = require "../core/isConstructor"
 assertType = require "../core/assertType"
 errorTypes = require "../errorTypes"
-Validator = require "../types/Validator"
+Validator = require "./Validator"
 isType = require "../core/isType"
 
-module.exports = Validator.Type "Shape", (types) ->
+module.exports = Validator.Type "Shape", (name, types) ->
 
+  assertType name, String
   assertType types, Object
+
+  types: types
+
+  getName: -> name
 
   validate: (obj, key) ->
     unless isConstructor obj, Object

@@ -2,10 +2,13 @@ var Validator, throwFailure;
 
 throwFailure = require("failure").throwFailure;
 
-Validator = require("../types/Validator");
+Validator = require("./Validator");
 
 module.exports = Validator.Type("Kind", function(type) {
   return {
+    getName: function() {
+      return "a kind of " + type.name;
+    },
     validate: function(value, key) {
       if (value instanceof type) {
         return true;
@@ -17,12 +20,13 @@ module.exports = Validator.Type("Kind", function(type) {
       };
     },
     fail: function(values) {
-      var error;
-      if (values.key) {
-        error = TypeError("'" + values.key + "' must inherit from " + type.name + "!");
+      var error, reason;
+      if (!values.key) {
+        reason = "Expected " + this.name + "!";
       } else {
-        error = TypeError("Expected a kind of " + type.name + "!");
+        reason = "'" + values.key + "' must be " + this.name + "!";
       }
+      error = TypeError(reason);
       return throwFailure(error, values);
     }
   };

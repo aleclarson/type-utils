@@ -1,8 +1,11 @@
 var Validator, Void;
 
-Validator = require("../types/Validator");
+Validator = require("./Validator");
 
 module.exports = Void = Validator("Void", {
+  getName: function() {
+    return "undefined";
+  },
   validate: function(value, key) {
     if (value === void 0) {
       return true;

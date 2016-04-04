@@ -1,13 +1,21 @@
-var Validator, inArray, throwFailure;
+var Validator, assertType, inArray, throwFailure;
 
 throwFailure = require("failure").throwFailure;
 
 inArray = require("in-array");
 
-Validator = require("../types/Validator");
+assertType = require("../core/assertType");
 
-module.exports = Validator.Type("OneOf", function(expectedValues) {
+Validator = require("./Validator");
+
+module.exports = Validator.Type("OneOf", function(name, expectedValues) {
+  assertType(name, String);
+  assertType(expectedValues, Array);
   return {
+    expectedValues: expectedValues,
+    getName: function() {
+      return name;
+    },
     validate: function(value, key) {
       if (inArray(expectedValues, value)) {
         return true;
@@ -19,12 +27,13 @@ module.exports = Validator.Type("OneOf", function(expectedValues) {
       };
     },
     fail: function(values) {
-      var error;
-      if (values.key) {
-        error = TypeError("Unexpected value!");
+      var error, reason;
+      if (!values.key) {
+        reason = "Unexpected value!";
       } else {
-        error = TypeError("'" + key + "' has an unexpected value!");
+        reason = "'" + values.key + "' has an unexpected value!";
       }
+      error = TypeError(reason);
       return throwFailure(error, values);
     }
   };

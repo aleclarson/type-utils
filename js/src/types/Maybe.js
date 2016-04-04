@@ -1,10 +1,12 @@
-var Validator, Void, errorTypes, isType, throwFailure;
+var Validator, Void, errorTypes, formatType, isType, throwFailure;
 
 throwFailure = require("failure").throwFailure;
 
+formatType = require("../core/formatType");
+
 errorTypes = require("../errorTypes");
 
-Validator = require("../types/Validator");
+Validator = require("./Validator");
 
 isType = require("../core/isType");
 
@@ -12,6 +14,9 @@ Void = require("../types/Void");
 
 module.exports = Validator.Type("Maybe", function(type) {
   return {
+    getName: function() {
+      return formatType(type) + "?";
+    },
     validate: function(value, key) {
       if (value === void 0) {
         return true;

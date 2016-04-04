@@ -8,13 +8,18 @@ assertType = require("../core/assertType");
 
 errorTypes = require("../errorTypes");
 
-Validator = require("../types/Validator");
+Validator = require("./Validator");
 
 isType = require("../core/isType");
 
-module.exports = Validator.Type("Shape", function(types) {
+module.exports = Validator.Type("Shape", function(name, types) {
+  assertType(name, String);
   assertType(types, Object);
   return {
+    types: types,
+    getName: function() {
+      return name;
+    },
     validate: function(obj, key) {
       var type, value;
       if (!isConstructor(obj, Object)) {

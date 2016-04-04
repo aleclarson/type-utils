@@ -1,8 +1,11 @@
 var Null, Validator;
 
-Validator = require("../types/Validator");
+Validator = require("./Validator");
 
 module.exports = Null = Validator("Null", {
+  getName: function() {
+    return "null";
+  },
   validate: function(value, key) {
     if (value === null) {
       return true;

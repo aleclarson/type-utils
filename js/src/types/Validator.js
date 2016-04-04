@@ -1,4 +1,4 @@
-var NamedFunction, Validator, WeakMap, setKind, setType;
+var NamedFunction, Validator, WeakMap, define, setKind, setType;
 
 NamedFunction = require("named-function");
 
@@ -16,18 +16,28 @@ module.exports = Validator = NamedFunction("Validator", function(name, validator
   return type();
 });
 
-setKind(Validator, Function);
+define = Object.defineProperty;
+
+define(Validator.prototype, "name", {
+  configurable: false,
+  enumerable: true,
+  get: function() {
+    return this.getName();
+  }
+});
 
 Validator.Type = NamedFunction("ValidatorType", function(name, constructor) {
   var type;
   type = NamedFunction(name, function() {
     var validator;
     validator = constructor.apply(null, arguments);
-    validator.name = name;
     return setType(validator, type);
   });
   setKind(type, Validator);
   type[Validator.type] = true;
+  type.prototype.getName = function() {
+    return name;
+  };
   return type;
 });
 

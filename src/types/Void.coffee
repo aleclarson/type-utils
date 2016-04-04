@@ -1,8 +1,10 @@
 
-Validator = require "../types/Validator"
+Validator = require "./Validator"
 
 module.exports =
 Void = Validator "Void",
+
+  getName: -> "undefined"
 
   validate: (value, key) ->
     return yes if value is undefined

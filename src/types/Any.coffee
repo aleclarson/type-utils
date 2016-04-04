@@ -1,7 +1,7 @@
 
 emptyFunction = require "emptyFunction"
 
-Validator = require "../types/Validator"
+Validator = require "./Validator"
 
 module.exports = Validator "Any",
 
