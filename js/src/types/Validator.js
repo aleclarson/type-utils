@@ -1,8 +1,6 @@
-var NamedFunction, Validator, WeakMap, define, setKind, setType;
+var NamedFunction, Validator, define, setKind, setType;
 
-NamedFunction = require("named-function");
-
-WeakMap = require("weak-map");
+NamedFunction = require("NamedFunction");
 
 setKind = require("../core/setKind");
 

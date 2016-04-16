@@ -1,6 +1,5 @@
 
-NamedFunction = require "named-function"
-WeakMap = require "weak-map"
+NamedFunction = require "NamedFunction"
 
 setKind = require "../core/setKind"
 setType = require "../core/setType"

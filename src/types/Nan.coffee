@@ -1,6 +1,4 @@
 
-NamedFunction = require "named-function"
-
 Validator = require "./Validator"
 isNan = require "../core/isNan"
 

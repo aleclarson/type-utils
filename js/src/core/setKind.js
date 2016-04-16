@@ -1,12 +1,3 @@
-var setType;
-
-setType = require("./setType");
-
-module.exports = function(type, kind) {
-  var prototype;
-  prototype = type && type.prototype;
-  setType(prototype, kind);
-  return type;
-};
+module.exports = require("setKind");
 
 //# sourceMappingURL=../../../map/src/core/setKind.map

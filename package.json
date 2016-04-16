@@ -4,11 +4,19 @@
   "version": "1.0.0",
   "main": "js/src/index.js",
   "dependencies": {
+    "accumulator": "aleclarson/accumulator#1.0.0",
+    "emptyFunction": "aleclarson/emptyFunction#1.0.0",
     "failure": "aleclarson/failure#1.0.0",
     "in-array": "^0.1.0",
-    "lotus-require": "aleclarson/lotus-require#1.0.0",
-    "named-function": "aleclarson/named-function#1.0.3",
-    "setType": "aleclarson/setType#1.0.0"
+    "NamedFunction": "aleclarson/NamedFunction#1.0.0",
+    "setType": "aleclarson/setType#1.0.0",
+    "setKind": "aleclarson/setKind#1.0.0"
+  },
+  "lotus": {
+    "plugins": [
+      "lotus-coffee",
+      "lotus-runner"
+    ]
   },
   "repository": {
     "type": "git",

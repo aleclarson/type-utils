@@ -1,6 +1,4 @@
-var NamedFunction, Nan, Validator, isNan;
-
-NamedFunction = require("named-function");
+var Nan, Validator, isNan;
 
 Validator = require("./Validator");
 

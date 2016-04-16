@@ -8,20 +8,28 @@ describe("getKind()", function() {
       return getKind(null);
     }).toThrowError("Expected a constructor type!");
   });
+  it("returns the constructor of prototype.__proto__", function() {
+    var Bar, Foo, kind;
+    Foo = function() {};
+    Bar = function() {};
+    Object.setPrototypeOf(Bar.prototype, Foo.prototype);
+    kind = getKind(Bar);
+    return expect(kind).toBe(Foo);
+  });
+  it("returns null for prototypes with an undefined __proto__", function() {
+    var Foo;
+    Foo = function() {};
+    Object.setPrototypeOf(Foo.prototype, null);
+    return expect(getKind(Foo)).toBe(null);
+  });
   it("returns null when Object is passed", function() {
-    var kind;
-    kind = getKind(Object);
-    return expect(kind).toBe(null);
+    return expect(getKind(Object)).toBe(null);
   });
   it("returns Object when Function is passed", function() {
-    var kind;
-    kind = getKind(Function);
-    return expect(kind).toBe(Object);
+    return expect(getKind(Function)).toBe(Object);
   });
   return it("return Object when Array is passed", function() {
-    var kind;
-    kind = getKind(Array);
-    return expect(kind).toBe(Object);
+    return expect(getKind(Array)).toBe(Object);
   });
 });
 
