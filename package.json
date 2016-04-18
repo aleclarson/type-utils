@@ -7,6 +7,7 @@
     "accumulator": "aleclarson/accumulator#1.0.0",
     "emptyFunction": "aleclarson/emptyFunction#1.0.0",
     "failure": "aleclarson/failure#1.0.0",
+    "getProto": "aleclarson/getProto#1.0.0",
     "in-array": "^0.1.0",
     "NamedFunction": "aleclarson/NamedFunction#1.0.0",
     "setType": "aleclarson/setType#1.0.0",
