@@ -6,8 +6,9 @@ Validator = require("./Validator");
 
 module.exports = Validator.Type("Kind", function(type) {
   return {
+    type: type,
     getName: function() {
-      return "a kind of " + type.name;
+      return "a kind of " + type.getName();
     },
     validate: function(value, key) {
       if (value instanceof type) {

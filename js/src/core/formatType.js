@@ -27,9 +27,15 @@ getTypeName = function(type) {
   if (type === null) {
     return "null object";
   }
-  if (type && type.name) {
-    return type.name;
+  if (type) {
+    if (type.name) {
+      return type.name;
+    }
+    if (type.getName) {
+      return type.getName();
+    }
   }
+  console.log(require('util').format(type));
   return "[unknown type]";
 };
 

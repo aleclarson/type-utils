@@ -8,6 +8,8 @@ isType = require "../core/isType"
 
 module.exports = Validator.Type "ArrayOf", (type) ->
 
+  type: type
+
   getName: -> "an array of " + formatType type
 
   validate: (array, key = "array") ->

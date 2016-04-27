@@ -6,21 +6,21 @@ inArray = require "in-array"
 assertType = require "../core/assertType"
 Validator = require "./Validator"
 
-module.exports = Validator.Type "OneOf", (name, expectedValues) ->
+module.exports = Validator.Type "OneOf", (name, values) ->
 
   assertType name, String
-  assertType expectedValues, Array
+  assertType values, Array
 
-  expectedValues: expectedValues
+  values: values
 
   getName: -> name
 
   validate: (value, key) ->
-    return yes if inArray expectedValues, value
-    return { key, value, expectedValues }
+    return yes if inArray values, value
+    return { key, value, expected: values }
 
   fail: (values) ->
-    unless values.key then reason = "Unexpected value!"
-    else reason = "'" + values.key + "' has an unexpected value!"
+    if values.key then reason = "'#{values.key}' must be a #{name}!"
+    else reason = "Expected a #{name}!"
     error = TypeError reason
     throwFailure error, values

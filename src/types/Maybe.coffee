@@ -9,6 +9,8 @@ Void = require "../types/Void"
 
 module.exports = Validator.Type "Maybe", (type) ->
 
+  type: type
+
   getName: -> formatType(type) + "?"
 
   validate: (value, key) ->

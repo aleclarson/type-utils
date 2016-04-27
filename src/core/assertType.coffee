@@ -10,35 +10,37 @@ isType = require "./isType"
 
 module.exports = (value, type, key) ->
 
+  if isConstructor key, Object
+    relevantData = key
+    key = relevantData.key
+  else relevantData = { key }
+
+  unless type
+    throwFailure Error("Must provide a 'type'!"), { value, type, key, relevantData }
+
   if isValidator type
     result = type.validate value, key
     if result isnt yes
-      validatorFailed type, result, key
+      throwFailedValidator type, result, relevantData
 
   else unless isType value, type
-    invalidType type, value, key
+    throwInvalidType type, value, relevantData
 
   return
 
-validatorFailed = (type, result, key) ->
+throwFailedValidator = (type, result, relevantData) ->
 
   accumulated = Accumulator()
   accumulated.push result
-
-  if isConstructor key, Object
-    accumulated.push key
-    key = key.key
+  accumulated.push relevantData if relevantData
 
   type.fail accumulated.flatten()
 
-invalidType = (type, value, key) ->
+throwInvalidType = (type, value, relevantData) ->
 
   accumulated = Accumulator()
   accumulated.push { type, value }
+  accumulated.push relevantData if relevantData
 
-  if isConstructor key, Object
-    accumulated.push key
-    key = key.key
-
-  error = errorTypes.invalidType type, key
+  error = errorTypes.invalidType type, relevantData.key
   throwFailure error, accumulated.flatten()

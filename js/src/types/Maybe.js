@@ -14,6 +14,7 @@ Void = require("../types/Void");
 
 module.exports = Validator.Type("Maybe", function(type) {
   return {
+    type: type,
     getName: function() {
       return formatType(type) + "?";
     },

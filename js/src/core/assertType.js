@@ -1,4 +1,4 @@
-var Accumulator, errorTypes, invalidType, isConstructor, isType, isValidator, throwFailure, validatorFailed;
+var Accumulator, errorTypes, isConstructor, isType, isValidator, throwFailedValidator, throwFailure, throwInvalidType;
 
 throwFailure = require("failure").throwFailure;
 
@@ -13,40 +13,54 @@ errorTypes = require("../errorTypes");
 isType = require("./isType");
 
 module.exports = function(value, type, key) {
-  var result;
+  var relevantData, result;
+  if (isConstructor(key, Object)) {
+    relevantData = key;
+    key = relevantData.key;
+  } else {
+    relevantData = {
+      key: key
+    };
+  }
+  if (!type) {
+    throwFailure(Error("Must provide a 'type'!"), {
+      value: value,
+      type: type,
+      key: key,
+      relevantData: relevantData
+    });
+  }
   if (isValidator(type)) {
     result = type.validate(value, key);
     if (result !== true) {
-      validatorFailed(type, result, key);
+      throwFailedValidator(type, result, relevantData);
     }
   } else if (!isType(value, type)) {
-    invalidType(type, value, key);
+    throwInvalidType(type, value, relevantData);
   }
 };
 
-validatorFailed = function(type, result, key) {
+throwFailedValidator = function(type, result, relevantData) {
   var accumulated;
   accumulated = Accumulator();
   accumulated.push(result);
-  if (isConstructor(key, Object)) {
-    accumulated.push(key);
-    key = key.key;
+  if (relevantData) {
+    accumulated.push(relevantData);
   }
   return type.fail(accumulated.flatten());
 };
 
-invalidType = function(type, value, key) {
+throwInvalidType = function(type, value, relevantData) {
   var accumulated, error;
   accumulated = Accumulator();
   accumulated.push({
     type: type,
     value: value
   });
-  if (isConstructor(key, Object)) {
-    accumulated.push(key);
-    key = key.key;
+  if (relevantData) {
+    accumulated.push(relevantData);
   }
-  error = errorTypes.invalidType(type, key);
+  error = errorTypes.invalidType(type, relevantData.key);
   return throwFailure(error, accumulated.flatten());
 };
 

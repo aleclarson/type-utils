@@ -8,30 +8,30 @@ assertType = require("../core/assertType");
 
 Validator = require("./Validator");
 
-module.exports = Validator.Type("OneOf", function(name, expectedValues) {
+module.exports = Validator.Type("OneOf", function(name, values) {
   assertType(name, String);
-  assertType(expectedValues, Array);
+  assertType(values, Array);
   return {
-    expectedValues: expectedValues,
+    values: values,
     getName: function() {
       return name;
     },
     validate: function(value, key) {
-      if (inArray(expectedValues, value)) {
+      if (inArray(values, value)) {
         return true;
       }
       return {
         key: key,
         value: value,
-        expectedValues: expectedValues
+        expected: values
       };
     },
     fail: function(values) {
       var error, reason;
-      if (!values.key) {
-        reason = "Unexpected value!";
+      if (values.key) {
+        reason = "'" + values.key + "' must be a " + name + "!";
       } else {
-        reason = "'" + values.key + "' has an unexpected value!";
+        reason = "Expected a " + name + "!";
       }
       error = TypeError(reason);
       return throwFailure(error, values);

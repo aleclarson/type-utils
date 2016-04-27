@@ -5,7 +5,9 @@ Validator = require "./Validator"
 
 module.exports = Validator.Type "Kind", (type) ->
 
-  getName: -> "a kind of " + type.name
+  type: type
+
+  getName: -> "a kind of " + type.getName()
 
   validate: (value, key) ->
     return yes if value instanceof type

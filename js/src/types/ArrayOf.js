@@ -12,6 +12,7 @@ isType = require("../core/isType");
 
 module.exports = Validator.Type("ArrayOf", function(type) {
   return {
+    type: type,
     getName: function() {
       return "an array of " + formatType(type);
     },
