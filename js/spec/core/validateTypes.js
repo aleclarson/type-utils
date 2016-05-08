@@ -59,8 +59,8 @@ describe("validateTypes()", function() {
     });
     try {
       validateTypes(obj, spec);
-    } catch (_error) {
-      error = _error;
+    } catch (error1) {
+      error = error1;
       result.error = error;
     }
     return expect(result.error != null).toBe(true);

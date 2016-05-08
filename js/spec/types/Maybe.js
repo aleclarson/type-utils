@@ -22,7 +22,7 @@ describe("Maybe", function() {
     expect(result).toBe(true);
     result = type.validate("foo");
     expect(result).toBe(true);
-    result = type.validate(NaN);
+    result = type.validate(0/0);
     return expect(result).not.toBe(true);
   });
 });

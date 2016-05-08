@@ -25,7 +25,7 @@ describe("getType()", function() {
   });
   it("returns Number for numeric literals", function() {
     var i, len, ref, value;
-    ref = [Infinity, -1, 0, 1, Math.PI];
+    ref = [2e308, -1, 0, 1, Math.PI];
     for (i = 0, len = ref.length; i < len; i++) {
       value = ref[i];
       expect(getType(value)).toBe(Number);

@@ -9,10 +9,10 @@
     "emptyFunction": "aleclarson/emptyFunction#1.0.0",
     "failure": "aleclarson/failure#1.0.0",
     "getProto": "aleclarson/getProto#1.0.0",
-    "in-array": "^0.1.0",
     "isConstructor": "aleclarson/isConstructor#1.0.0",
     "setKind": "aleclarson/setKind#1.0.0",
-    "setType": "aleclarson/setType#1.0.0"
+    "setType": "aleclarson/setType#1.0.0",
+    "in-array": "aleclarson/in-array#1.0.0"
   },
   "lotus": {
     "plugins": [
