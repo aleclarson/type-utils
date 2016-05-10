@@ -1,8 +1,7 @@
 
 NamedFunction = require "NamedFunction"
-
-setKind = require "../core/setKind"
-setType = require "../core/setType"
+setKind = require "setKind"
+setType = require "setType"
 
 module.exports =
 Validator = NamedFunction "Validator", (name, validator) ->

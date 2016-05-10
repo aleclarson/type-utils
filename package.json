@@ -1,8 +1,7 @@
 {
   "name": "type-utils",
-  "description": "Functional utils for type comparison in JavaScript.",
   "version": "1.0.0",
-  "main": "js/src/index.js",
+  "main": "js/src/index",
   "dependencies": {
     "NamedFunction": "aleclarson/NamedFunction#2.0.0",
     "accumulator": "aleclarson/accumulator#1.0.0",

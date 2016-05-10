@@ -9,9 +9,9 @@ module.exports =
 
   getConstructor: require "./core/getConstructor"
 
-  setType: require "./core/setType"
+  setType: require "setType"
 
-  setKind: require "./core/setKind"
+  setKind: require "setKind"
 
   isType: require "./core/isType"
 

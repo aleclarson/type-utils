@@ -2,9 +2,9 @@ var NamedFunction, Validator, define, setKind, setType;
 
 NamedFunction = require("NamedFunction");
 
-setKind = require("../core/setKind");
+setKind = require("setKind");
 
-setType = require("../core/setType");
+setType = require("setType");
 
 module.exports = Validator = NamedFunction("Validator", function(name, validator) {
   var type;
