@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "getKind.js",
+  "sourceRoot": "../../../src/core",
+  "sources": [
+    "getKind.coffee"
+  ],
+  "names": [],
+  "mappings": "AACA,IAAA;;AAAA,QAAA,GAAW,OAAA,CAAQ,UAAR;;AAEX,cAAA,GAAiB,OAAA,CAAQ,kBAAR;;AACjB,MAAA,GAAS,OAAA,CAAQ,UAAR;;AAET,MAAM,CAAC,OAAP,GAAiB,SAAC,IAAD;AACf,MAAA;EAAA,SAAA,GAAY,IAAA,IAAS,IAAI,CAAC;EAC1B,MAAA,CAAO,SAAP,EAAkB,8BAAlB;EACA,SAAA,GAAY,QAAA,CAAS,SAAT;EACZ,IAAA,CAAmB,SAAnB;AAAA,WAAO,KAAP;;AACA,SAAO,cAAA,CAAe,SAAf;AALQ"
+}

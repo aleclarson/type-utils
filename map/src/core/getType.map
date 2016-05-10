@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "getType.js",
+  "sourceRoot": "../../../src/core",
+  "sources": [
+    "getType.coffee"
+  ],
+  "names": [],
+  "mappings": "AACA,IAAA;;AAAA,cAAA,GAAiB,OAAA,CAAQ,kBAAR;;AACjB,IAAA,GAAO,OAAA,CAAQ,eAAR;;AACP,IAAA,GAAO,OAAA,CAAQ,eAAR;;AAEP,MAAM,CAAC,OAAP,GAAiB,SAAC,KAAD;EACf,IAAe,KAAA,KAAS,MAAxB;AAAA,WAAO,KAAP;;EACA,IAAe,KAAA,KAAS,IAAxB;AAAA,WAAO,KAAP;;AACA,SAAO,cAAA,CAAe,KAAf;AAHQ"
+}

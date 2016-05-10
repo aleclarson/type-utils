@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "isValidator.js",
+  "sourceRoot": "../../../src/core",
+  "sources": [
+    "isValidator.coffee"
+  ],
+  "names": [],
+  "mappings": "AACA,IAAA;;AAAA,SAAA,GAAY,OAAA,CAAQ,oBAAR;;AAEZ,MAAM,CAAC,OAAP,GACA,WAAA,GAAc,SAAC,KAAD;SACZ,KAAA,IAAU,KAAK,CAAC,WAAY,CAAA,SAAS,CAAC,IAAV;AADhB"
+}

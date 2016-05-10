@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "isConstructor.js",
+  "sourceRoot": "../../../src/core",
+  "sources": [
+    "isConstructor.coffee"
+  ],
+  "names": [],
+  "mappings": "AACA,MAAM,CAAC,OAAP,GAAiB,OAAA,CAAQ,eAAR"
+}

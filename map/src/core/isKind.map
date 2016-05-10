@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "isKind.js",
+  "sourceRoot": "../../../src/core",
+  "sources": [
+    "isKind.coffee"
+  ],
+  "names": [],
+  "mappings": "AAEA,MAAM,CAAC,OAAP,GAAiB,SAAC,KAAD,EAAQ,IAAR;AACf,SAAO,KAAA,YAAiB;AADT"
+}

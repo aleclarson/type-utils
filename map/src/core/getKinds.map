@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "getKinds.js",
+  "sourceRoot": "../../../src/core",
+  "sources": [
+    "getKinds.coffee"
+  ],
+  "names": [],
+  "mappings": "AACA,IAAA;;AAAA,OAAA,GAAU,OAAA,CAAQ,WAAR;;AAEV,MAAM,CAAC,OAAP,GAAiB,SAAC,IAAD;AACf,MAAA;EAAA,KAAA,GAAQ;AACR,SAAA,IAAA;IACE,KAAK,CAAC,IAAN,CAAW,IAAX;IACA,IAAA,GAAO,OAAA,CAAQ,IAAR;IACP,IAAa,YAAb;AAAA,YAAA;;EAHF;AAIA,SAAO;AANQ"
+}
